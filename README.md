@@ -9,7 +9,7 @@ This project created with
 - State Management GetX
 
 ### SplashScreen
-![splashscreen](./screenshots/picture-1.png);
+<img src='./screenshots/picture-1.png' width='30'>
 
 ### Login Page
 ![loginpage](./screenshots/picture-2.png);
