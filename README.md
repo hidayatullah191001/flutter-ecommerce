@@ -14,7 +14,7 @@ Berikut ini adalah beberapa teknologi yang digunakan untuk pengembangan aplikasi
 
 ## Pre Realeases Apk
 Untuk menggunakan aplikasi, anda bisa mendownload .apk di link bawah ini
-<a href="https://github.com/hidayatullah191001/flutter-ecommerce/releases/tag/v1.0.0" target="_blan">Download APK</a>
+<a href="https://github.com/hidayatullah191001/flutter-ecommerce/releases/tag/v1.0.0" target="_blank">Download APK</a>
 
 ## Screenshots
 Ini adalah beberapa hasil screenshots aplikasi Shamo, Aplikasi E-Commerce yang dibuat menggunakan Flutter dan GetX
