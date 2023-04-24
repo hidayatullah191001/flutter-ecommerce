@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shamo/app/shared/state.dart';
 import 'package:shamo/app/shared/theme.dart';
 import 'package:shamo/app/widgets/product_card.dart';
 import 'package:shamo/app/widgets/product_tile.dart';
@@ -8,7 +9,8 @@ import 'package:shamo/app/widgets/product_tile.dart';
 import 'controllers/home.controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
+  final controller = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
     Widget header() {
@@ -26,14 +28,14 @@ class HomeScreen extends GetView<HomeController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hallo Alex',
+                    'Hallo ${controller.user.name ?? ''}',
                     style: primaryTextStyle.copyWith(
                       fontSize: 24,
                       fontWeight: semiBold,
                     ),
                   ),
                   Text(
-                    '@alexin',
+                    '@${controller.user.username ?? ''}',
                     style: subtitleTextStyle.copyWith(fontSize: 16),
                   ),
                 ],
@@ -42,10 +44,10 @@ class HomeScreen extends GetView<HomeController> {
             Container(
               width: 54,
               height: 54,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: AssetImage('assets/img_user.png'),
+                  image: NetworkImage(controller.user.profilePhotoUrl ?? ''),
                 ),
               ),
             )
@@ -196,20 +198,21 @@ class HomeScreen extends GetView<HomeController> {
         margin: const EdgeInsets.only(top: 14),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              SizedBox(
-                width: defaultMargin,
-              ),
-              Row(
-                children: const [
-                  ProductCard(),
-                  ProductCard(),
-                  ProductCard(),
-                  ProductCard(),
-                ],
-              )
-            ],
+          child: Obx(
+            () => Row(
+              children: [
+                SizedBox(
+                  width: defaultMargin,
+                ),
+                Row(
+                  children: controller.listProducts.value
+                      .map((product) => ProductCard(
+                            product: product,
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -220,27 +223,32 @@ class HomeScreen extends GetView<HomeController> {
         margin: const EdgeInsets.only(
           top: 14,
         ),
-        child: Column(
-          children: const [
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-          ],
+        child: Obx(
+          () => Column(
+            children: controller.listProducts.value
+                .map((product) => ProductTile(product: product))
+                .toList(),
+          ),
         ),
       );
     }
 
-    return ListView(
-      children: [
-        header(),
-        categories(),
-        title(title: 'Popular Products'),
-        popularProduct(),
-        title(title: 'New Arrivals'),
-        newArrivals(),
-      ],
-    );
+    return controller.dataState.value == DataState.loading
+        ? Center(
+            child: CircularProgressIndicator(
+              color: primaryTextColor,
+              strokeWidth: 2,
+            ),
+          )
+        : ListView(
+            children: [
+              header(),
+              categories(),
+              title(title: 'Popular Products'),
+              popularProduct(),
+              title(title: 'New Arrivals'),
+              newArrivals(),
+            ],
+          );
   }
 }

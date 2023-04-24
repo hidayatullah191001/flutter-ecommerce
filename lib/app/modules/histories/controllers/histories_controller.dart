@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class WishlistController extends GetxController {
-  //TODO: Implement WishlistController
+class HistoriesController extends GetxController {
+  //TODO: Implement HistoriesController
 
   final count = 0.obs;
   @override

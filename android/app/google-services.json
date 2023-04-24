@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "281303160710",
+    "project_id": "chat-shamo",
+    "storage_bucket": "chat-shamo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:281303160710:android:61e06037a5b4a58376be07",
+        "android_client_info": {
+          "package_name": "com.example.shamo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "281303160710-a05kt2f1shpbsbc0rh6n9lm8ap447nak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3_PPhg5_zQSr95hun2pkIJMnAWI-is9w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "281303160710-a05kt2f1shpbsbc0rh6n9lm8ap447nak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

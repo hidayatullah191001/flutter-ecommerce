@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shamo/app/controllers/wishlist_controller.dart';
+import 'package:shamo/app/data/models/product_model.dart';
 import 'package:shamo/app/shared/theme.dart';
 
 class WishlistCard extends StatelessWidget {
-  const WishlistCard({Key? key}) : super(key: key);
+  final ProductModel product;
+  const WishlistCard({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(WishlistController());
     return Container(
       margin: const EdgeInsets.only(
         top: 20,
@@ -24,8 +29,8 @@ class WishlistCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              'assets/img_sepatu_1.png',
+            child: Image.network(
+              product.galleries![0].url.toString(),
               width: 60,
             ),
           ),
@@ -37,7 +42,7 @@ class WishlistCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Terrex Urban Low',
+                  product.name.toString(),
                   style: primaryTextStyle.copyWith(fontWeight: semiBold),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -45,15 +50,18 @@ class WishlistCard extends StatelessWidget {
                   height: 2,
                 ),
                 Text(
-                  '\$143,98',
+                  '\$${product.price}',
                   style: priceTextStyle,
                 ),
               ],
             ),
           ),
-          Image.asset(
-            'assets/icon_wishlist_full.png',
-            width: 34,
+          GestureDetector(
+            onTap: () => controller.setProduct(product),
+            child: Image.asset(
+              'assets/icon_wishlist_full.png',
+              width: 34,
+            ),
           ),
         ],
       ),

@@ -10,6 +10,10 @@ dependencies:
   get: 4.6.5
   google_fonts: 4.0.3
   carousel_slider: 4.2.1
+  http: 0.13.5
+  get_storage: 2.1.1
+  firebase_core: 2.10.0
+  cloud_firestore: 4.5.2
   flutter: 
     sdk: flutter
 

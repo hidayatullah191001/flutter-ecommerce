@@ -66,6 +66,7 @@ class SignInView extends GetView<SignInController> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: controller.emailC,
                         style: primaryTextStyle,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
@@ -89,7 +90,7 @@ class SignInView extends GetView<SignInController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Email Address',
+              'Password',
               style:
                   primaryTextStyle.copyWith(fontSize: 16, fontWeight: medium),
             ),
@@ -115,6 +116,7 @@ class SignInView extends GetView<SignInController> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: controller.passwordC,
                         style: primaryTextStyle,
                         obscureText: true,
                         decoration: InputDecoration.collapsed(
@@ -138,19 +140,45 @@ class SignInView extends GetView<SignInController> {
         width: double.infinity,
         margin: const EdgeInsets.only(top: 30),
         child: TextButton(
-          onPressed: () => Get.offAndToNamed(Routes.MAIN),
+          onPressed: () => controller.login(),
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: Text(
-            'Sign In',
-            style: primaryTextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: medium,
-            ),
+          child: Obx(
+            () => controller.isLoading.value == true
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: primaryTextColor,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Loading',
+                        style: primaryTextStyle.copyWith(
+                          fontSize: 16,
+                          fontWeight: medium,
+                        ),
+                      )
+                    ],
+                  )
+                : Text(
+                    'Sign In',
+                    style: primaryTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: medium,
+                    ),
+                  ),
           ),
         ),
       );

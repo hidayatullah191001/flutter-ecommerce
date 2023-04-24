@@ -49,9 +49,10 @@ class EditprofileView extends GetView<EditprofileController> {
               style: secondaryTextStyle.copyWith(fontSize: 13),
             ),
             TextFormField(
+              controller: controller.nameC,
               style: primaryTextStyle,
               decoration: InputDecoration(
-                hintText: 'Alex Keinzal',
+                hintText: 'Full Name...',
                 hintStyle: primaryTextStyle,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
@@ -76,9 +77,10 @@ class EditprofileView extends GetView<EditprofileController> {
               style: secondaryTextStyle.copyWith(fontSize: 13),
             ),
             TextFormField(
+              controller: controller.usernameC,
               style: primaryTextStyle,
               decoration: InputDecoration(
-                hintText: '@alexkeinn',
+                hintText: 'Username...',
                 hintStyle: primaryTextStyle,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
@@ -103,9 +105,10 @@ class EditprofileView extends GetView<EditprofileController> {
               style: secondaryTextStyle.copyWith(fontSize: 13),
             ),
             TextFormField(
+              controller: controller.emailC,
               style: primaryTextStyle,
               decoration: InputDecoration(
-                hintText: 'alex.kein@gmail.com',
+                hintText: 'Email...',
                 hintStyle: primaryTextStyle,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
@@ -153,12 +156,13 @@ class EditprofileView extends GetView<EditprofileController> {
             width: 100,
             height: 100,
             margin: EdgeInsets.only(top: defaultMargin),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
-                image: AssetImage(
-                  'assets/img_user.png',
+                image: NetworkImage(
+                  controller.user.profilePhotoUrl.toString(),
                 ),
+                fit: BoxFit.cover,
               ),
             ),
           ),

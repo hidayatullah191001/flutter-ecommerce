@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shamo/app/modules/cart/controllers/cart_controller.dart';
 import 'package:shamo/app/routes/app_pages.dart';
 import 'package:shamo/app/shared/theme.dart';
 import 'package:shamo/app/widgets/checkout_card.dart';
@@ -8,7 +9,9 @@ import 'package:shamo/app/widgets/checkout_card.dart';
 import '../controllers/checkout_controller.dart';
 
 class CheckoutView extends GetView<CheckoutController> {
-  const CheckoutView({Key? key}) : super(key: key);
+  CheckoutView({Key? key}) : super(key: key);
+
+  final cartController = Get.put(CartController(), permanent: true);
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget header() {
@@ -44,8 +47,13 @@ class CheckoutView extends GetView<CheckoutController> {
                   style: primaryTextStyle.copyWith(
                       fontSize: 16, fontWeight: medium),
                 ),
-                CheckoutCard(),
-                CheckoutCard(),
+                Column(
+                  children: cartController.carts.value
+                      .map(
+                        (cart) => CheckoutCard(cart: cart),
+                      )
+                      .toList(),
+                ),
               ],
             ),
           ),
@@ -156,7 +164,7 @@ class CheckoutView extends GetView<CheckoutController> {
                       ),
                     ),
                     Text(
-                      '2 Items',
+                      '${cartController.totalItems()} Items',
                       style: primaryTextStyle.copyWith(
                         fontWeight: medium,
                       ),
@@ -177,7 +185,7 @@ class CheckoutView extends GetView<CheckoutController> {
                       ),
                     ),
                     Text(
-                      '\$575.96',
+                      '\$${cartController.totalPrice()}',
                       style: primaryTextStyle.copyWith(
                         fontWeight: medium,
                       ),
@@ -225,7 +233,7 @@ class CheckoutView extends GetView<CheckoutController> {
                       ),
                     ),
                     Text(
-                      '\$593,3',
+                      '\$${cartController.totalPrice()}',
                       style: priceTextStyle.copyWith(
                         fontWeight: semiBold,
                       ),
@@ -249,7 +257,10 @@ class CheckoutView extends GetView<CheckoutController> {
             width: double.infinity,
             margin: EdgeInsets.symmetric(vertical: defaultMargin),
             child: TextButton(
-              onPressed: () => Get.offAndToNamed(Routes.CHECKOUT_SUCCESS),
+              onPressed: () {
+                controller.postCheckout(
+                    cartController.carts, cartController.totalPrice());
+              },
               style: TextButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(

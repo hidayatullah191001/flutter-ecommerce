@@ -1,23 +1,32 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:shamo/app/data/api/auth_services.dart';
+import 'package:shamo/app/data/models/user_model.dart';
+import 'package:shamo/app/routes/app_pages.dart';
 
 class ProfileController extends GetxController {
-  //TODO: Implement ProfileController
-
-  final count = 0.obs;
+  late UserModel user;
   @override
   void onInit() {
+    // TODO: implement onInit
     super.onInit();
+    getDataUser();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  logout() async {
+    final data = await AuthServices().logout();
+    if (data) {
+      Get.snackbar('Success', 'Berhasil keluar dari aplikasi!');
+      Get.offAndToNamed(Routes.SIGN_IN);
+    } else {
+      Get.snackbar('Failed', 'Failed Logout');
+    }
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  getDataUser() {
+    final box = GetStorage();
+    final data = box.read('user');
+    user = UserModel();
+    user = UserModel.fromJson(data);
   }
-
-  void increment() => count.value++;
 }

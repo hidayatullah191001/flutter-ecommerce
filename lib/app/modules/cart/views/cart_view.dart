@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shamo/app/modules/cart/controllers/cart_controller.dart';
 import 'package:shamo/app/routes/app_pages.dart';
 import 'package:shamo/app/shared/theme.dart';
 import 'package:shamo/app/widgets/cart_card.dart';
-
-import '../controllers/cart_controller.dart';
 
 class CartView extends GetView<CartController> {
   const CartView({Key? key}) : super(key: key);
@@ -18,7 +17,7 @@ class CartView extends GetView<CartController> {
           backgroundColor: background1Color,
           centerTitle: true,
           title: Text(
-            'Favorite Shoes',
+            'Your Cart',
             style: primaryTextStyle.copyWith(
               fontSize: 18,
               fontWeight: medium,
@@ -89,19 +88,28 @@ class CartView extends GetView<CartController> {
     }
 
     Widget content() {
-      return ListView(
-        padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-        children: [
-          CartCard(),
-        ],
+      return Obx(
+        () => ListView(
+          padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+          children: controller.carts.value
+              .map(
+                (cart) => CartCard(
+                  cart: cart,
+                ),
+              )
+              .toList(),
+        ),
       );
     }
 
     Widget customBottomNav() {
       return SizedBox(
-        height: 180,
+        height: 130,
         child: Column(
           children: [
+            const SizedBox(
+              height: 5,
+            ),
             Container(
               margin: EdgeInsets.symmetric(horizontal: defaultMargin),
               child: Row(
@@ -111,23 +119,25 @@ class CartView extends GetView<CartController> {
                     'Subtotal',
                     style: primaryTextStyle,
                   ),
-                  Text(
-                    '\$287,59',
-                    style: priceTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
+                  Obx(
+                    () => Text(
+                      '\$${controller.totalPrice()}',
+                      style: priceTextStyle.copyWith(
+                          fontSize: 16, fontWeight: semiBold),
+                    ),
                   ),
                 ],
               ),
             ),
             const SizedBox(
-              height: 30,
+              height: 5,
             ),
             Divider(
               thickness: 0.4,
               color: subtitleColor,
             ),
             const SizedBox(
-              height: 30,
+              height: 15,
             ),
             Container(
               height: 50,
@@ -163,11 +173,17 @@ class CartView extends GetView<CartController> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: background3Color,
-      appBar: header(),
-      body: content(),
-      bottomNavigationBar: customBottomNav(),
+    print('data carts = ${controller.carts.value}');
+
+    return Obx(
+      () => Scaffold(
+        backgroundColor: background3Color,
+        appBar: header(),
+        body: controller.carts.value.isEmpty ? emptyCart() : content(),
+        bottomNavigationBar: controller.carts.value.isEmpty
+            ? const SizedBox()
+            : customBottomNav(),
+      ),
     );
   }
 }

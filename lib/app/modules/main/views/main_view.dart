@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shamo/app/modules/cart/controllers/cart_controller.dart';
 import 'package:shamo/app/modules/chat/chat.screen.dart';
 import 'package:shamo/app/modules/home/home.screen.dart';
 import 'package:shamo/app/modules/profile/profile.screen.dart';
@@ -12,7 +13,8 @@ import 'package:shamo/app/shared/theme.dart';
 import '../controllers/main_controller.dart';
 
 class MainView extends GetView<MainController> {
-  const MainView({Key? key}) : super(key: key);
+  MainView({Key? key}) : super(key: key);
+  final cartController = Get.put(CartController());
   @override
   Widget build(BuildContext context) {
     Widget cartButton() {
@@ -108,16 +110,16 @@ class MainView extends GetView<MainController> {
     Widget body() {
       switch (controller.currentIndex.value) {
         case 0:
-          return const HomeScreen();
+          return HomeScreen();
           break;
         case 1:
-          return const ChatScreen();
+          return ChatScreen();
           break;
         case 2:
-          return const WishlistScreen();
+          return WishlistScreen();
           break;
         case 3:
-          return const ProfileScreen();
+          return ProfileScreen();
           break;
         default:
           return Container();
@@ -128,7 +130,7 @@ class MainView extends GetView<MainController> {
       backgroundColor: controller.currentIndex.value == 0
           ? background1Color
           : background3Color,
-      body: SafeArea(child: Obx(() => body())),
+      body: Obx(() => body()),
       floatingActionButton: cartButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: customBottomNav(),

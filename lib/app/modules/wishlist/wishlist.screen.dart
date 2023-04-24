@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shamo/app/controllers/wishlist_controller.dart';
+import 'package:shamo/app/routes/app_pages.dart';
 import 'package:shamo/app/shared/theme.dart';
 import 'package:shamo/app/widgets/wishlist_card.dart';
 
-import 'controllers/wishlist.controller.dart';
-
 class WishlistScreen extends GetView<WishlistController> {
-  const WishlistScreen({Key? key}) : super(key: key);
+  WishlistScreen({Key? key}) : super(key: key);
+  @override
+  final controller = Get.put(WishlistController());
   @override
   Widget build(BuildContext context) {
     Widget header() {
@@ -61,7 +63,7 @@ class WishlistScreen extends GetView<WishlistController> {
               SizedBox(
                 height: 44,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () => Get.offAndToNamed(Routes.MAIN),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,
@@ -94,15 +96,15 @@ class WishlistScreen extends GetView<WishlistController> {
         child: Container(
           width: double.infinity,
           color: background3Color,
-          child: ListView(
-            padding: EdgeInsets.symmetric(
-              horizontal: defaultMargin,
+          child: Obx(
+            () => ListView(
+              padding: EdgeInsets.symmetric(
+                horizontal: defaultMargin,
+              ),
+              children: controller.wishList.value
+                  .map((product) => WishlistCard(product: product))
+                  .toList(),
             ),
-            children: const [
-              WishlistCard(),
-              WishlistCard(),
-              WishlistCard(),
-            ],
           ),
         ),
       );
@@ -111,7 +113,9 @@ class WishlistScreen extends GetView<WishlistController> {
     return Column(
       children: [
         header(),
-        emptyWishlist(),
+        Obx(
+          () => controller.wishList.value.isEmpty ? emptyWishlist() : content(),
+        ),
       ],
     );
   }

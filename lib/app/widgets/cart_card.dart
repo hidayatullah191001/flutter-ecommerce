@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shamo/app/data/models/cart_model.dart';
+import 'package:shamo/app/modules/cart/controllers/cart_controller.dart';
 import 'package:shamo/app/shared/theme.dart';
 
 class CartCard extends StatelessWidget {
-  const CartCard({Key? key}) : super(key: key);
+  final CartModel cart;
+  CartCard({Key? key, required this.cart}) : super(key: key);
+
+  final cartController = Get.put(CartController());
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +30,9 @@ class CartCard extends StatelessWidget {
                 height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/img_sepatu_1.png'),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        cart.product!.galleries![0].url.toString()),
                   ),
                 ),
               ),
@@ -37,13 +44,13 @@ class CartCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Terrex Urban Low',
+                      cart.product!.name.toString(),
                       style: primaryTextStyle.copyWith(
                         fontWeight: semiBold,
                       ),
                     ),
                     Text(
-                      '\$143,98',
+                      '\$${cart.product!.price}',
                       style: priceTextStyle,
                     )
                   ],
@@ -51,23 +58,35 @@ class CartCard extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Image.asset(
-                    'assets/icon_add.png',
-                    width: 16,
+                  InkWell(
+                    onTap: () {
+                      cartController.addQuantity(cart.id!);
+                    },
+                    child: Image.asset(
+                      'assets/icon_add.png',
+                      width: 16,
+                    ),
                   ),
                   const SizedBox(
                     height: 2,
                   ),
-                  Text(
-                    '2',
-                    style: primaryTextStyle.copyWith(fontWeight: medium),
+                  Obx(
+                    () => Text(
+                      cart.quantity.value.toString(),
+                      style: primaryTextStyle.copyWith(fontWeight: medium),
+                    ),
                   ),
                   const SizedBox(
                     height: 2,
                   ),
-                  Image.asset(
-                    'assets/icon_min.png',
-                    width: 16,
+                  InkWell(
+                    onTap: () {
+                      cartController.reduceQuantity(cart.id!);
+                    },
+                    child: Image.asset(
+                      'assets/icon_min.png',
+                      width: 16,
+                    ),
                   ),
                 ],
               )
@@ -76,8 +95,10 @@ class CartCard extends StatelessWidget {
           const SizedBox(
             height: 12,
           ),
-          GestureDetector(
-            onTap: () {},
+          InkWell(
+            onTap: () {
+              cartController.removeCart(cart.id!);
+            },
             child: Row(
               children: [
                 Icon(

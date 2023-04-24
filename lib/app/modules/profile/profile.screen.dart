@@ -7,7 +7,8 @@ import 'package:shamo/app/shared/theme.dart';
 import 'controllers/profile.controller.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
-  const ProfileScreen({Key? key}) : super(key: key);
+  ProfileScreen({Key? key}) : super(key: key);
+  final controller = Get.put(ProfileController());
   @override
   Widget build(BuildContext context) {
     Widget header() {
@@ -21,8 +22,8 @@ class ProfileScreen extends GetView<ProfileController> {
             child: Row(
               children: [
                 ClipOval(
-                  child: Image.asset(
-                    'assets/img_user.png',
+                  child: Image.network(
+                    controller.user.profilePhotoUrl.toString() ?? '',
                     width: 64,
                   ),
                 ),
@@ -34,12 +35,12 @@ class ProfileScreen extends GetView<ProfileController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hallo, Alex',
+                        'Hallo, ${controller.user.name}',
                         style: primaryTextStyle.copyWith(
                             fontSize: 24, fontWeight: semiBold),
                       ),
                       Text(
-                        '@alexkeinn',
+                        '@${controller.user.username}',
                         style: subtitleTextStyle.copyWith(
                           fontSize: 16,
                         ),
@@ -48,7 +49,7 @@ class ProfileScreen extends GetView<ProfileController> {
                   ),
                 ),
                 InkWell(
-                  onTap: () => Get.offAndToNamed(Routes.SIGN_IN),
+                  onTap: () => controller.logout(),
                   child: Image.asset(
                     'assets/icon_exit.png',
                     width: 20,
@@ -107,7 +108,10 @@ class ProfileScreen extends GetView<ProfileController> {
                   'Edit Profile',
                 ),
               ),
-              menuItem('Your Orders'),
+              InkWell(
+                onTap: () => Get.toNamed(Routes.HISTORIES),
+                child: menuItem('Your Orders'),
+              ),
               menuItem('Help'),
               const SizedBox(
                 height: 32,

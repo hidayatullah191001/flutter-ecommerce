@@ -13,6 +13,8 @@ abstract class Routes {
   static const CART = _Paths.CART;
   static const CHECKOUT = _Paths.CHECKOUT;
   static const CHECKOUT_SUCCESS = _Paths.CHECKOUT_SUCCESS;
+  static const HISTORIES = _Paths.HISTORIES;
+  static const DETAIL_HISTORIES = _Paths.DETAIL_HISTORIES;
 }
 
 abstract class _Paths {
@@ -27,4 +29,6 @@ abstract class _Paths {
   static const CART = '/cart';
   static const CHECKOUT = '/checkout';
   static const CHECKOUT_SUCCESS = '/checkout-success';
+  static const HISTORIES = '/histories';
+  static const DETAIL_HISTORIES = '/detail-histories';
 }

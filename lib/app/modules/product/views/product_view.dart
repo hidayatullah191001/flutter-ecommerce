@@ -2,14 +2,91 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shamo/app/controllers/wishlist_controller.dart';
+import 'package:shamo/app/modules/cart/controllers/cart_controller.dart';
+import 'package:shamo/app/routes/app_pages.dart';
 import 'package:shamo/app/shared/theme.dart';
 
 import '../controllers/product_controller.dart';
 
 class ProductView extends GetView<ProductController> {
-  const ProductView({Key? key}) : super(key: key);
+  ProductView({Key? key}) : super(key: key);
+
+  final wishlistController = Get.put(WishlistController());
+  final cartController = Get.put(CartController());
+
   @override
   Widget build(BuildContext context) {
+    Future<void> showSuccessDialog() async {
+      return showDialog(
+        context: context,
+        builder: (context) => SizedBox(
+          width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+          child: AlertDialog(
+            backgroundColor: background3Color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      onPressed: () => Get.back(),
+                      icon: Icon(
+                        Icons.close,
+                        color: primaryTextColor,
+                      ),
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/icon_success_info.png',
+                    width: 100,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Hurray :)',
+                    style: primaryTextStyle.copyWith(
+                      fontSize: 18,
+                      fontWeight: semiBold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Item added successfully',
+                    style: secondaryTextStyle,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextButton(
+                    onPressed: () => Get.toNamed(Routes.CART),
+                    style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        backgroundColor: primaryColor),
+                    child: Text(
+                      'View My Cart',
+                      style: primaryTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: semiBold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     Widget indicator(int index) {
       return Obx(
         () => Container(
@@ -66,14 +143,14 @@ class ProductView extends GetView<ProductController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'TERREX URBAN LOW',
+                          controller.product.value.name.toString(),
                           style: primaryTextStyle.copyWith(
                             fontSize: 18,
                             fontWeight: semiBold,
                           ),
                         ),
                         Text(
-                          'Hiking',
+                          controller.product.value.category!.name.toString(),
                           style: secondaryTextStyle.copyWith(
                             fontSize: 12,
                           ),
@@ -81,9 +158,44 @@ class ProductView extends GetView<ProductController> {
                       ],
                     ),
                   ),
-                  Image.asset(
-                    'assets/icon_wishlist.png',
-                    width: 46,
+                  GestureDetector(
+                    onTap: () {
+                      wishlistController.setProduct(controller.product.value);
+                      if (wishlistController
+                          .isWishlist(controller.product.value)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: secondaryColor,
+                            content: const Text(
+                              'Has been added to WishList',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: alertColor,
+                            content: const Text(
+                              'Has been removed from WishList',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    child: Obx(
+                      () => wishlistController
+                              .isWishlist(controller.product.value)
+                          ? Image.asset(
+                              'assets/icon_wishlist_full.png',
+                              width: 46,
+                            )
+                          : Image.asset(
+                              'assets/icon_wishlist.png',
+                              width: 46,
+                            ),
+                    ),
                   ),
                 ],
               ),
@@ -110,7 +222,7 @@ class ProductView extends GetView<ProductController> {
                     style: primaryTextStyle,
                   ),
                   Text(
-                    '\$143,98',
+                    '\$${controller.product.value.price}',
                     style: priceTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: semiBold,
@@ -140,7 +252,7 @@ class ProductView extends GetView<ProductController> {
                     height: 12,
                   ),
                   Text(
-                    'Unpaved trails and mixed surfaces are easy when you have the traction and support you need. Casual enough for the daily commute.',
+                    '${controller.product.value.description}',
                     style: subtitleTextStyle.copyWith(
                       fontWeight: light,
                     ),
@@ -194,13 +306,17 @@ class ProductView extends GetView<ProductController> {
               margin: EdgeInsets.all(defaultMargin),
               child: Row(
                 children: [
-                  Container(
-                    width: 54,
-                    height: 54,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                      image: AssetImage('assets/button_chat.png'),
-                    )),
+                  InkWell(
+                    onTap: () => Get.toNamed(Routes.CHATPAGE,
+                        arguments: controller.product.value),
+                    child: Container(
+                      width: 54,
+                      height: 54,
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                        image: AssetImage('assets/button_chat.png'),
+                      )),
+                    ),
                   ),
                   const SizedBox(
                     width: 16,
@@ -209,7 +325,10 @@ class ProductView extends GetView<ProductController> {
                     child: SizedBox(
                       height: 54,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          cartController.addCart(controller.product.value);
+                          showSuccessDialog();
+                        },
                         style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -250,7 +369,7 @@ class ProductView extends GetView<ProductController> {
                   icon: const Icon(Icons.chevron_left_outlined),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => Get.toNamed(Routes.CART),
                   icon: Icon(
                     Icons.shopping_bag,
                     color: background1Color,
@@ -260,9 +379,9 @@ class ProductView extends GetView<ProductController> {
             ),
           ),
           CarouselSlider(
-            items: controller.images
-                .map((image) => Image.asset(
-                      image,
+            items: controller.product.value.galleries!
+                .map((image) => Image.network(
+                      image.url!,
                       width: MediaQuery.of(context).size.width,
                       height: 310,
                       fit: BoxFit.cover,

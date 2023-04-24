@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shamo/app/data/api/message_services.dart';
+import 'package:shamo/app/data/models/message_model.dart';
+import 'package:shamo/app/data/models/product_model.dart';
 import 'package:shamo/app/shared/theme.dart';
 import 'package:shamo/app/widgets/chat_bubble.dart';
 
@@ -8,6 +11,7 @@ import '../controllers/chatpage_controller.dart';
 
 class ChatpageView extends GetView<ChatpageController> {
   const ChatpageView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget header() {
@@ -76,59 +80,66 @@ class ChatpageView extends GetView<ChatpageController> {
       );
     }
 
-    Widget productReview() {
-      return Container(
-        width: 225,
-        height: 74,
-        margin: const EdgeInsets.only(bottom: 20),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: background5Color,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: primaryColor,
+    Widget productPreview() {
+      return Obx(
+        () => Container(
+          width: 225,
+          height: 74,
+          margin: const EdgeInsets.only(bottom: 20),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: background5Color,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: primaryColor,
+            ),
           ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                'assets/img_sepatu_1.png',
-                width: 54,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  controller.product.value.galleries![0].url.toString(),
+                  width: 54,
+                ),
               ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'COURT VISIO....',
-                    style: primaryTextStyle,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    '\$57,15',
-                    style: priceTextStyle.copyWith(
-                      fontWeight: medium,
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      controller.product.value.name.toString(),
+                      style: primaryTextStyle,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    Text(
+                      '\$${controller.product.value.price}',
+                      style: priceTextStyle.copyWith(
+                        fontWeight: medium,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Image.asset(
-              'assets/icon_close.png',
-              width: 22,
-            ),
-          ],
+              InkWell(
+                onTap: () {
+                  controller.product(UnintializedProductModel());
+                },
+                child: Image.asset(
+                  'assets/icon_close.png',
+                  width: 22,
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -136,80 +147,111 @@ class ChatpageView extends GetView<ChatpageController> {
     Widget chatInput() {
       return Container(
         margin: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            productReview(),
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 45,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: background4Color,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: TextFormField(
-                        decoration: InputDecoration.collapsed(
-                          hintText: 'Type message...',
-                          hintStyle: subtitleTextStyle,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(
+                () => controller.product.value is UnintializedProductModel
+                    ? const SizedBox()
+                    : productPreview(),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 45,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: background4Color,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: TextFormField(
+                            controller: controller.chatC,
+                            style: primaryTextStyle,
+                            decoration: InputDecoration.collapsed(
+                              hintText: 'Type message...',
+                              hintStyle: subtitleTextStyle,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    width: 45,
-                    height: 45,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(
-                        10,
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      await MessageService().addMessage(
+                        user: controller.user,
+                        isFromUser: true,
+                        message: controller.chatC.text,
+                        product: controller.product.value,
+                      );
+
+                      controller.product(UnintializedProductModel());
+                      controller.chatC.value.text == '';
+                    },
+                    child: Container(
+                      width: 45,
+                      height: 45,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(
+                          10,
+                        ),
+                      ),
+                      child: Image.asset(
+                        'assets/icon_submit.png',
                       ),
                     ),
-                    child: Image.asset(
-                      'assets/icon_submit.png',
-                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       );
     }
 
     Widget content() {
-      return ListView(
-        padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-        children: const [
-          ChatBubble(
-            isSender: true,
-            text: 'Hi, This item is still avaible',
-            hasProduct: true,
-          ),
-          ChatBubble(
-            isSender: false,
-            text: 'Goodnight, this item is avaible right now',
-          ),
-        ],
-      );
+      return StreamBuilder<List<MessageModel>>(
+          stream:
+              MessageService().getMessageByUserId(userId: controller.user.id!),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView(
+                padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+                children: snapshot.data!
+                    .map((MessageModel message) => ChatBubble(
+                          isSender: message.isFromUser!,
+                          text: message.message!,
+                          product: message.product!,
+                        ))
+                    .toList(),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          });
     }
 
     return Scaffold(
       backgroundColor: background3Color,
+      resizeToAvoidBottomInset: false,
       appBar: header(),
       body: content(),
       bottomNavigationBar: chatInput(),

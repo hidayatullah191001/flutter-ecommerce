@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shamo/app/data/models/message_model.dart';
+import 'package:shamo/app/data/models/product_model.dart';
 import 'package:shamo/app/routes/app_pages.dart';
 import 'package:shamo/app/shared/theme.dart';
 
 class ChatTile extends StatelessWidget {
-  const ChatTile({Key? key}) : super(key: key);
+  final MessageModel message;
+
+  const ChatTile({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed(Routes.CHATPAGE),
+      onTap: () => Get.toNamed(
+        Routes.CHATPAGE,
+        arguments: UnintializedProductModel(),
+      ),
       child: Container(
         margin: const EdgeInsets.only(top: 33),
         child: Column(
@@ -37,7 +44,7 @@ class ChatTile extends StatelessWidget {
                         style: primaryTextStyle.copyWith(fontSize: 15),
                       ),
                       Text(
-                        'Good Nigh, this item is on...',
+                        message.message!,
                         style: secondaryTextStyle.copyWith(fontWeight: light),
                         overflow: TextOverflow.ellipsis,
                       ),

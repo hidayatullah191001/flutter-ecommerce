@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shamo/app/data/models/product_model.dart';
 import 'package:shamo/app/routes/app_pages.dart';
 import 'package:shamo/app/shared/theme.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({Key? key}) : super(key: key);
+  final ProductModel product;
+
+  const ProductCard({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.toNamed(Routes.PRODUCT),
+      onTap: () => Get.toNamed(Routes.PRODUCT, arguments: product),
       child: Container(
         width: 215,
         height: 278,
@@ -24,8 +27,8 @@ class ProductCard extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            Image.asset(
-              'assets/img_sepatu_1.png',
+            Image.network(
+              product.galleries![0].url.toString(),
               width: 215,
               height: 150,
               fit: BoxFit.cover,
@@ -36,25 +39,26 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hiking',
+                    product.category!.name.toString(),
                     style: secondaryTextStyle.copyWith(fontSize: 12),
                   ),
                   const SizedBox(
                     height: 6,
                   ),
                   Text(
-                    'Hiking',
+                    product.name.toString(),
                     style: blackTextStyle.copyWith(
                       fontSize: 18,
                       fontWeight: semiBold,
                     ),
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                   const SizedBox(
                     height: 6,
                   ),
                   Text(
-                    '\$58,67',
+                    '\$${product.price}',
                     style: priceTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: medium,

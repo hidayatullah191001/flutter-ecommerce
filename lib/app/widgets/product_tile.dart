@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shamo/app/data/models/product_model.dart';
 import 'package:shamo/app/routes/app_pages.dart';
 import 'package:shamo/app/shared/theme.dart';
 
 class ProductTile extends StatelessWidget {
-  const ProductTile({Key? key}) : super(key: key);
+  final ProductModel product;
+  ProductTile({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.toNamed(Routes.PRODUCT),
+      onTap: () => Get.toNamed(Routes.PRODUCT, arguments: product),
       child: Container(
         margin: EdgeInsets.only(
           left: defaultMargin,
@@ -20,8 +22,8 @@ class ProductTile extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                'assets/img_sepatu_1.png',
+              child: Image.network(
+                product.galleries![0].url.toString(),
                 width: 120,
                 height: 120,
                 fit: BoxFit.cover,
@@ -35,25 +37,26 @@ class ProductTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hiking',
+                    product.category!.name.toString(),
                     style: secondaryTextStyle.copyWith(fontSize: 12),
                   ),
                   const SizedBox(
                     height: 6,
                   ),
                   Text(
-                    'Hiking',
+                    product.name.toString(),
                     style: primaryTextStyle.copyWith(
                       fontSize: 18,
                       fontWeight: semiBold,
                     ),
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                   const SizedBox(
                     height: 6,
                   ),
                   Text(
-                    '\$58,67',
+                    '\$${product.price}',
                     style: priceTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: medium,

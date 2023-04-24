@@ -7,7 +7,10 @@ import 'package:shamo/app/shared/theme.dart';
 import '../controllers/sign_up_controller.dart';
 
 class SignUpView extends GetView<SignUpController> {
-  const SignUpView({Key? key}) : super(key: key);
+  SignUpView({Key? key}) : super(key: key);
+
+  @override
+  SignUpController controller = Get.put(SignUpController());
   @override
   Widget build(BuildContext context) {
     Widget header() {
@@ -66,6 +69,7 @@ class SignUpView extends GetView<SignUpController> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: controller.nameC,
                         style: primaryTextStyle,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Your Full name',
@@ -115,6 +119,7 @@ class SignUpView extends GetView<SignUpController> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: controller.usernameC,
                         style: primaryTextStyle,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Your Username',
@@ -164,6 +169,7 @@ class SignUpView extends GetView<SignUpController> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: controller.emailC,
                         style: primaryTextStyle,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
@@ -213,6 +219,7 @@ class SignUpView extends GetView<SignUpController> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: controller.passwordC,
                         style: primaryTextStyle,
                         obscureText: true,
                         decoration: InputDecoration.collapsed(
@@ -236,19 +243,45 @@ class SignUpView extends GetView<SignUpController> {
         width: double.infinity,
         margin: const EdgeInsets.only(top: 30),
         child: TextButton(
-          onPressed: () => Get.offAndToNamed(Routes.MAIN),
+          onPressed: () => controller.register(),
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: Text(
-            'Sign Up',
-            style: primaryTextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: medium,
-            ),
+          child: Obx(
+            () => controller.isLoading.value == true
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: primaryTextColor,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Loading',
+                        style: primaryTextStyle.copyWith(
+                          fontSize: 16,
+                          fontWeight: medium,
+                        ),
+                      )
+                    ],
+                  )
+                : Text(
+                    'Sign Up',
+                    style: primaryTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: medium,
+                    ),
+                  ),
           ),
         ),
       );
@@ -297,7 +330,6 @@ class SignUpView extends GetView<SignUpController> {
               emailInput(),
               passwordInput(),
               signUnButton(),
-              const Spacer(),
               footer(),
             ],
           ),

@@ -8,8 +8,12 @@ import '../modules/checkout/bindings/checkout_binding.dart';
 import '../modules/checkout/views/checkout_view.dart';
 import '../modules/checkout_success/bindings/checkout_success_binding.dart';
 import '../modules/checkout_success/views/checkout_success_view.dart';
+import '../modules/detail_histories/bindings/detail_histories_binding.dart';
+import '../modules/detail_histories/views/detail_histories_view.dart';
 import '../modules/editprofile/bindings/editprofile_binding.dart';
 import '../modules/editprofile/views/editprofile_view.dart';
+import '../modules/histories/bindings/histories_binding.dart';
+import '../modules/histories/views/histories_view.dart';
 import '../modules/main/bindings/main_binding.dart';
 import '../modules/main/views/main_view.dart';
 import '../modules/product/bindings/product_binding.dart';
@@ -41,12 +45,12 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SIGN_UP,
-      page: () => const SignUpView(),
+      page: () => SignUpView(),
       binding: SignUpBinding(),
     ),
     GetPage(
       name: _Paths.MAIN,
-      page: () => const MainView(),
+      page: () => MainView(),
       binding: MainBinding(),
     ),
     GetPage(
@@ -61,7 +65,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PRODUCT,
-      page: () => const ProductView(),
+      page: () => ProductView(),
       binding: ProductBinding(),
     ),
     GetPage(
@@ -71,13 +75,23 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CHECKOUT,
-      page: () => const CheckoutView(),
+      page: () => CheckoutView(),
       binding: CheckoutBinding(),
     ),
     GetPage(
       name: _Paths.CHECKOUT_SUCCESS,
       page: () => const CheckoutSuccessView(),
       binding: CheckoutSuccessBinding(),
+    ),
+    GetPage(
+      name: _Paths.HISTORIES,
+      page: () => const HistoriesView(),
+      binding: HistoriesBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_HISTORIES,
+      page: () => const DetailHistoriesView(),
+      binding: DetailHistoriesBinding(),
     ),
   ];
 }

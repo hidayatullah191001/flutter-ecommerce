@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shamo/app/data/api/message_services.dart';
+import 'package:shamo/app/data/models/message_model.dart';
 import 'package:shamo/app/shared/theme.dart';
 import 'package:shamo/app/widgets/chat_tile.dart';
 
 import 'controllers/chat.controller.dart';
 
 class ChatScreen extends GetView<ChatController> {
-  const ChatScreen({Key? key}) : super(key: key);
-
+  ChatScreen({Key? key}) : super(key: key);
+  @override
+  final controller = Get.put(ChatController());
   Widget header() {
     return AppBar(
       backgroundColor: background1Color,
@@ -89,20 +92,39 @@ class ChatScreen extends GetView<ChatController> {
   }
 
   Widget content() {
-    return Expanded(
-      child: Container(
-        width: double.infinity,
-        color: background3Color,
-        child: ListView(
-          padding: EdgeInsets.symmetric(
-            horizontal: defaultMargin,
-          ),
-          children: [
-            ChatTile(),
-          ],
+    return StreamBuilder<List<MessageModel>>(
+        stream: MessageService().getMessageByUserId(
+          userId: controller.user.id!,
         ),
-      ),
-    );
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasData) {
+            if (snapshot.data!.length == 0) {
+              return emptyChat();
+            }
+            return Expanded(
+              child: Container(
+                width: double.infinity,
+                color: background3Color,
+                child: ListView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: defaultMargin,
+                  ),
+                  children: [
+                    ChatTile(
+                        message: snapshot.data![snapshot.data!.length - 1]),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return emptyChat();
+          }
+        });
   }
 
   @override
