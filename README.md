@@ -1,6 +1,10 @@
 # Flutter E-Commerce
 
-This project created with
+Shamo adalah aplikasi e-commerce yang dibuat menggunakan teknologi Flutter dan GetX, sebuah library state management untuk Flutter yang memungkinkan pengembangan aplikasi dengan performa tinggi dan skalabilitas yang baik.
+
+Dalam pengembangan aplikasi e-commerce seperti Shamo, penggunaan Flutter dan GetX dapat mempercepat pengembangan dan memudahkan pengelolaan state dan data pada aplikasi. Keduanya juga memungkinkan pembuatan aplikasi yang lebih responsif dan mudah digunakan oleh pengguna.
+
+Berikut ini adalah beberapa teknologi yang digunakan untuk pengembangan aplikasi e-commerce.
 
 - Flutter
 - Dart
@@ -8,22 +12,34 @@ This project created with
 - Firebase 
 - State Management GetX
 
+## Pre Realeases Apk
+Untuk menggunakan aplikasi, anda bisa mendownload .apk di link bawah ini
+![DownloadAPK](./build/app/outputs/apk/release/app-release.apk)
+
+## Screenshots
+Ini adalah beberapa hasil screenshots aplikasi Shamo, Aplikasi E-Commerce yang dibuat menggunakan Flutter dan GetX
 ### SplashScreen
-<img src='./screenshots/picture-1.png' width='30'>
+<img src='./screenshots/picture-1.png' width='150'>
 
 ### Login Page
-![loginpage](./screenshots/picture-2.png);
+<img src='./screenshots/picture-2.png' width='150'>
+
 ### Register Page
-![registerpage](./screenshots/picture-3.png);
+<img src='./screenshots/picture-3.png' width='150'>
+
 ### Home Page
-![homepage](./screenshots/picture-4.png);
+<img src='./screenshots/picture-4.png' width='150'>
+
 ### Detail Produk Page
-![detailpage](./screenshots/picture-5.png);
+<img src='./screenshots/picture-5.png' width='150'>
+
 ### Cart Page
-![cartpage](./screenshots/picture-6.png);
+<img src='./screenshots/picture-6.png' width='150'>
+
 ### Checkout Page
-![chekoutpage](./screenshots/picture-7.png);
-![chekoutpage](./screenshots/picture-8.png);
+<img src='./screenshots/picture-7.png' width='150'>
+<img src='./screenshots/picture-8.png' width='150'>
+
 ### Chat Page
-![chekoutpage](./screenshots/picture-9.png);
+<img src='./screenshots/picture-9.png' width='150'>
 
