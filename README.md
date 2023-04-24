@@ -9,4 +9,4 @@ This project created with
 - State Management GetX
 
 ### SplashScreen
-![CodingTask1.1](./screenshots/CodingTask1.1.PNG)
+![splashscreen](./screenshots/picture-1.png)
