@@ -1,9 +1,6 @@
 # Flutter E-Commerce
 
-<center>
-  <img src='./screenshots/Upgrade Your Skill With LevelUp (1).jpg' width='150'>
-</center>
-
+<div style="text-align:center"><img src='./screenshots/Upgrade Your Skill With LevelUp (1).jpg'></div>
 
 Shamo adalah aplikasi e-commerce yang dibuat menggunakan teknologi Flutter dan GetX, sebuah library state management untuk Flutter yang memungkinkan pengembangan aplikasi dengan performa tinggi dan skalabilitas yang baik.
 
